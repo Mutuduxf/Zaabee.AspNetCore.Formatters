@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="wwwroot\" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.All" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Zaabee.AspNetCore.Formatters.Jil\Zaabee.AspNetCore.Formatters.Jil.csproj" />
+      <ProjectReference Include="..\Zaabee.AspNetCore.Formatters.Protobuf\Zaabee.AspNetCore.Formatters.Protobuf.csproj" />
+    </ItemGroup>
+</Project>
