@@ -6,14 +6,14 @@ Protobuf formatters for asp.net core
 
 ### NuGet
 
-    Install-Package Zaabee.AspNetCore.Protobuf
+    Install-Package Zaabee.AspNetCore.Formatters.Protobuf
 
 ### Build Project
 
 Create an asp.net core project and import reference in startup.cs
 
 ```CSharp
-using Zaabee.AspNetCore.Protobuf;
+using Zaabee.AspNetCore.Formatters.Protobuf;
 ```
 
 Modify the ConfigureServices like this
