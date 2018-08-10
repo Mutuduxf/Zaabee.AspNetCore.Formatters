@@ -24,7 +24,7 @@ namespace TestProject
         }
 
         [Fact]
-        public void TestPrtobuf()
+        public void TestProtobuf()
         {
             // HTTP Post with Protobuf Response Body
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-protobuf"));
@@ -57,8 +57,10 @@ namespace TestProject
 
             try
             {
+                var str = responseForPost.Result.Content.ReadAsStringAsync()
+                    .Result;
                 var result =
-                    JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync()
+                    JSON.Deserialize<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync()
                         .Result);
 
                 Assert.True(CompareDtos(dtos, result));
