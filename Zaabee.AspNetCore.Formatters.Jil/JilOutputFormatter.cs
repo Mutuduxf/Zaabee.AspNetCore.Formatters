@@ -8,8 +8,11 @@ namespace Zaabee.AspNetCore.Formatters.Jil
 {
     public class JilOutputFormatter : OutputFormatter
     {
-        public JilOutputFormatter(string contentType)
+        private readonly Options _jilOptions;
+
+        public JilOutputFormatter(string contentType, Options jilOptions)
         {
+            _jilOptions = jilOptions;
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(contentType));
         }
 
@@ -17,8 +20,11 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         {
             var response = context.HttpContext.Response;
 
-            using (var reader = context.WriterFactory(response.Body, Encoding.UTF8))
-                return Task.FromResult(JSON.Serialize(reader));
+            using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
+            {
+                JSON.Serialize(context.Object, writer, _jilOptions);
+                return writer.FlushAsync();
+            }
         }
     }
 }

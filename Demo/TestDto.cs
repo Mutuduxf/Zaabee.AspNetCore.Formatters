@@ -13,5 +13,6 @@ namespace Demo
         [ProtoMember(4)] public List<TestDto> Kids { get; set; }
         [ProtoMember(5)] public long Tag { get; set; }
         [ProtoMember(6)] public TestEnum Enum { get; set; }
+//        [ProtoMember(7)] public DateTimeOffset TestTime { get; set; }
     }
 }

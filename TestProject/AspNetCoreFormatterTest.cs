@@ -16,27 +16,30 @@ namespace TestProject
 
     public class AspNetCoreFormatterTest
     {
-        private readonly HttpClient _client;
+        private readonly TestServer _server;
 
         public AspNetCoreFormatterTest()
         {
-            _client = new TestServer(new WebHostBuilder().UseStartup<Startup>()).CreateClient();
+            _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
         }
 
         [Fact]
         public void TestProtobuf()
         {
-            // HTTP Post with Protobuf Response Body
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-protobuf"));
-
+            var client = _server.CreateClient();
             var dtos = GetDtos();
             var stream = new MemoryStream();
             ProtoBuf.Serializer.Serialize(stream, dtos);
-
-            var httpContent = new StreamContent(stream);
+            
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            {
+                Content = new StreamContent(stream),
+                
+            };
+            httpRequestMessage.Headers.Add("Accept","application/x-protobuf");
 
             // HTTP POST with Protobuf Request Body
-            var responseForPost = _client.PostAsync("api/Values", httpContent);
+            var responseForPost = client.SendAsync(httpRequestMessage);
 
             var result = ProtoBuf.Serializer.Deserialize<List<TestDto>>(
                 responseForPost.Result.Content.ReadAsStreamAsync().Result);
@@ -47,40 +50,40 @@ namespace TestProject
         [Fact]
         public void TestJil()
         {
+            var client = _server.CreateClient();
             var dtos = GetDtos();
-            var json = JSON.Serialize(dtos);
+            var json = JSON.Serialize(dtos, new Options(dateFormat: DateTimeFormat.ISO8601,
+                excludeNulls: true, includeInherited: true,
+                serializationNameFormat: SerializationNameFormat.CamelCase));
 
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/x-jil");
-
-            // HTTP POST with Json Request Body
-            var responseForPost = _client.PostAsync("api/Values", httpContent);
-
-            try
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
             {
-                var str = responseForPost.Result.Content.ReadAsStringAsync()
-                    .Result;
-                var result =
-                    JSON.Deserialize<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync()
-                        .Result);
+                Content = new StringContent(json, Encoding.UTF8, "application/x-jil")
+            };
+            httpRequestMessage.Headers.Add("Accept","application/x-jil");
 
-                Assert.True(CompareDtos(dtos, result));
-            }
-            catch (Exception ex)
-            {
-                var msg = ex.Message;
-            }
+            var response = client.SendAsync(httpRequestMessage).Result;
+            
+            var result =
+                JSON.Deserialize<List<TestDto>>(response.Content.ReadAsStringAsync()
+                    .Result, new Options(dateFormat: DateTimeFormat.ISO8601,
+                    excludeNulls: true, includeInherited: true,
+                    serializationNameFormat: SerializationNameFormat.CamelCase));
+
+            Assert.True(CompareDtos(dtos, result));
         }
 
         [Fact]
         public void TestJson()
         {
+            var client = _server.CreateClient();
             var dtos = GetDtos();
             var json = JsonConvert.SerializeObject(dtos);
 
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             // HTTP POST with Json Request Body
-            var responseForPost = _client.PostAsync("api/Values", httpContent);
+            var responseForPost = client.PostAsync("api/Values", httpContent);
 
             var result =
                 JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
@@ -92,15 +95,29 @@ namespace TestProject
         {
             lstOne = lstOne ?? new List<TestDto>();
             lstTwo = lstTwo ?? new List<TestDto>();
-            
+
             if (lstOne.Count != lstTwo.Count) return false;
-            
+
             for (var i = 0; i < lstOne.Count; i++)
             {
                 var dtoOne = lstOne[i];
                 var dtoTwo = lstTwo[i];
-                if (dtoOne.Id != dtoTwo.Id || dtoOne.CreateTime != dtoTwo.CreateTime || dtoOne.Enum != dtoTwo.Enum ||
-                    dtoOne.Name != dtoTwo.Name || dtoOne.Tag != dtoTwo.Tag || !CompareDtos(dtoOne.Kids, dtoTwo.Kids))
+
+                var i1 = dtoOne.Id != dtoTwo.Id;
+                var i2 = dtoOne.CreateTime.Ticks != dtoTwo.CreateTime.Ticks;
+                var i3 = dtoOne.Enum != dtoTwo.Enum;
+                var i4 = dtoOne.Name != dtoTwo.Name;
+                var i5 = dtoOne.Tag != dtoTwo.Tag;
+//                var i6 = dtoOne.TestTime.Ticks != dtoTwo.TestTime.Ticks;
+
+
+                if (dtoOne.Id != dtoTwo.Id ||
+                    dtoOne.CreateTime.ToUniversalTime() != dtoTwo.CreateTime.ToUniversalTime() ||
+                    dtoOne.Enum != dtoTwo.Enum ||
+                    dtoOne.Name != dtoTwo.Name ||
+                    dtoOne.Tag != dtoTwo.Tag ||
+//                    dtoOne.TestTime != dtoTwo.TestTime ||
+                    !CompareDtos(dtoOne.Kids, dtoTwo.Kids))
                     return false;
             }
 
@@ -116,6 +133,7 @@ namespace TestProject
                     Id = Guid.NewGuid(),
                     Tag = long.MaxValue,
                     CreateTime = DateTime.Now,
+//                    TestTime = DateTimeOffset.Now,
                     Name = "0",
                     Enum = TestEnum.Apple,
                     Kids = new List<TestDto>
@@ -125,6 +143,7 @@ namespace TestProject
                             Id = Guid.NewGuid(),
                             Tag = long.MaxValue - 1,
                             CreateTime = DateTime.Now,
+//                            TestTime = DateTimeOffset.Now,
                             Name = "00",
                             Enum = TestEnum.Banana
                         },
@@ -133,6 +152,7 @@ namespace TestProject
                             Id = Guid.NewGuid(),
                             Tag = long.MaxValue - 2,
                             CreateTime = DateTime.Now,
+//                            TestTime = DateTimeOffset.Now,
                             Name = "01",
                             Enum = TestEnum.Pear
                         }
@@ -143,6 +163,7 @@ namespace TestProject
                     Id = Guid.NewGuid(),
                     Tag = long.MaxValue - 3,
                     CreateTime = DateTime.Now,
+//                    TestTime = DateTimeOffset.Now,
                     Name = "1",
                     Enum = TestEnum.Apple,
                     Kids = new List<TestDto>
@@ -152,6 +173,7 @@ namespace TestProject
                             Id = Guid.NewGuid(),
                             Tag = long.MaxValue - 4,
                             CreateTime = DateTime.Now,
+//                            TestTime = DateTimeOffset.Now,
                             Name = "10",
                             Enum = TestEnum.Banana
                         },
@@ -160,6 +182,7 @@ namespace TestProject
                             Id = Guid.NewGuid(),
                             Tag = long.MaxValue - 5,
                             CreateTime = DateTime.Now,
+//                            TestTime = DateTimeOffset.Now,
                             Name = "11",
                             Enum = TestEnum.Pear
                         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Jil;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +23,10 @@ namespace Demo
         {
             services.AddMvc(options =>
             {
-                options.AddProtobufFormatter();    
-                options.AddJilFormatter();
+                options.AddJilFormatter(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
+                    excludeNulls: true, includeInherited: true,
+                    serializationNameFormat: SerializationNameFormat.CamelCase));
+                options.AddProtobufFormatter();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
