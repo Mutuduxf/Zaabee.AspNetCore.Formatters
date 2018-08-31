@@ -13,9 +13,9 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         public JilInputFormatter(Options jilOptions, MediaTypeHeaderValue mediaTypeHeaderValue)
         {
             _jilOptions = jilOptions;
-            SupportedMediaTypes.Add(mediaTypeHeaderValue);
             SupportedEncodings.Add(UTF8EncodingWithoutBOM);
             SupportedEncodings.Add(UTF16EncodingLittleEndian);
+            SupportedMediaTypes.Add(mediaTypeHeaderValue);
         }
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)

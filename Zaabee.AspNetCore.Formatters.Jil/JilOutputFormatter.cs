@@ -15,9 +15,9 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         public JilOutputFormatter(Options jilOptions, MediaTypeHeaderValue mediaTypeHeaderValue)
         {
             _jilOptions = jilOptions;
-            SupportedMediaTypes.Add(mediaTypeHeaderValue);
             SupportedEncodings.Add(Encoding.UTF8);
             SupportedEncodings.Add(Encoding.Unicode);
+            SupportedMediaTypes.Add(mediaTypeHeaderValue);
         }
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
