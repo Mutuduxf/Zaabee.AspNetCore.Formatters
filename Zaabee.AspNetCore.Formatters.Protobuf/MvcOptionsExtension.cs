@@ -16,7 +16,7 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
             var mediaTypeHeaderValue = MediaTypeHeaderValue.Parse((StringSegment) contentType).CopyAsReadOnly();
 
             options.InputFormatters.Insert(options.InputFormatters.Count, new ProtobufInputFormatter(mediaTypeHeaderValue));
-            options.OutputFormatters.Insert(options.InputFormatters.Count, new ProtobufOutputFormatter(mediaTypeHeaderValue));
+            options.OutputFormatters.Insert(options.OutputFormatters.Count, new ProtobufOutputFormatter(mediaTypeHeaderValue));
             options.FormatterMappings.SetMediaTypeMappingForFormat(format, mediaTypeHeaderValue);
         }
     }
