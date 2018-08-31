@@ -1,8 +1,8 @@
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Jil;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Net.Http.Headers;
 
 namespace Zaabee.AspNetCore.Formatters.Jil
 {
@@ -10,9 +10,10 @@ namespace Zaabee.AspNetCore.Formatters.Jil
     {
         private readonly Options _jilOptions;
 
-        public JilInputFormatter(Options jilOptions)
+        public JilInputFormatter(Options jilOptions, MediaTypeHeaderValue mediaTypeHeaderValue)
         {
             _jilOptions = jilOptions;
+            SupportedMediaTypes.Add(mediaTypeHeaderValue);
         }
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)

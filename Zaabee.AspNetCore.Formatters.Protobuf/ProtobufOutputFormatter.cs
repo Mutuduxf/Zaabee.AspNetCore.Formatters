@@ -12,9 +12,9 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
 
         private static RuntimeTypeModel Model => model.Value;
 
-        public ProtobufOutputFormatter(string contentType)
+        public ProtobufOutputFormatter(MediaTypeHeaderValue contentType)
         {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(contentType));
+            SupportedMediaTypes.Add(contentType);
         }
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)

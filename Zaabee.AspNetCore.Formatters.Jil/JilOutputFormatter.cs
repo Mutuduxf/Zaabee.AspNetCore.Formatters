@@ -10,10 +10,11 @@ namespace Zaabee.AspNetCore.Formatters.Jil
     {
         private readonly Options _jilOptions;
 
-        public JilOutputFormatter(string contentType, Options jilOptions)
+        public JilOutputFormatter(string contentType, Options jilOptions, MediaTypeHeaderValue mediaTypeHeaderValue)
         {
             _jilOptions = jilOptions;
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(contentType));
+            SupportedMediaTypes.Add(mediaTypeHeaderValue);
         }
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)

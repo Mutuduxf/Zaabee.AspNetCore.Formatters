@@ -23,11 +23,13 @@ namespace Demo
         {
             services.AddMvc(options =>
             {
+                options.AddProtobufFormatter();
                 options.AddJilFormatter(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
                     excludeNulls: true, includeInherited: true,
                     serializationNameFormat: SerializationNameFormat.CamelCase));
-                options.AddProtobufFormatter();
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            })
+                .AddXmlSerializerFormatters()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

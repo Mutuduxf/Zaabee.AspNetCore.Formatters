@@ -30,13 +30,13 @@ namespace TestProject
             var dtos = GetDtos();
             var stream = new MemoryStream();
             ProtoBuf.Serializer.Serialize(stream, dtos);
-            
+
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
             {
-                Content = new StreamContent(stream),
-                
+                Content = new StreamContent(stream)
             };
-            httpRequestMessage.Headers.Add("Accept","application/x-protobuf");
+            httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-protobuf");
+            httpRequestMessage.Headers.Add("Accept", "application/x-protobuf");
 
             // HTTP POST with Protobuf Request Body
             var responseForPost = client.SendAsync(httpRequestMessage);
@@ -44,7 +44,7 @@ namespace TestProject
             var result = ProtoBuf.Serializer.Deserialize<List<TestDto>>(
                 responseForPost.Result.Content.ReadAsStreamAsync().Result);
 
-            Assert.True(CompareDtos(dtos,result));
+            Assert.True(CompareDtos(dtos, result));
         }
 
         [Fact]
@@ -79,11 +79,15 @@ namespace TestProject
             var client = _server.CreateClient();
             var dtos = GetDtos();
             var json = JsonConvert.SerializeObject(dtos);
-
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+            httpRequestMessage.Headers.Add("Accept","application/json");
 
             // HTTP POST with Json Request Body
-            var responseForPost = client.PostAsync("api/Values", httpContent);
+            var responseForPost = client.SendAsync(httpRequestMessage);
 
             var result =
                 JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);

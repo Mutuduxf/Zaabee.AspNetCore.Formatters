@@ -1,6 +1,7 @@
 ﻿using System;
 using Jil;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
 namespace Zaabee.AspNetCore.Formatters.Jil
@@ -13,9 +14,13 @@ namespace Zaabee.AspNetCore.Formatters.Jil
             if (string.IsNullOrWhiteSpace(contentType)) throw new ArgumentNullException(nameof(contentType));
             if (string.IsNullOrWhiteSpace(format)) throw new ArgumentNullException(nameof(format));
 
-            options.InputFormatters.Add(new JilInputFormatter(jilOptions));
-            options.OutputFormatters.Add(new JilOutputFormatter(contentType, jilOptions));
-            options.FormatterMappings.SetMediaTypeMappingForFormat(format, MediaTypeHeaderValue.Parse(contentType));
+            var mediaTypeHeaderValue = MediaTypeHeaderValue.Parse((StringSegment) contentType).CopyAsReadOnly();
+
+            options.InputFormatters.Insert(options.InputFormatters.Count,
+                new JilInputFormatter(jilOptions, mediaTypeHeaderValue));
+            options.OutputFormatters.Insert(options.InputFormatters.Count,
+                new JilOutputFormatter(contentType, jilOptions, mediaTypeHeaderValue));
+            options.FormatterMappings.SetMediaTypeMappingForFormat(format, mediaTypeHeaderValue);
         }
     }
 }

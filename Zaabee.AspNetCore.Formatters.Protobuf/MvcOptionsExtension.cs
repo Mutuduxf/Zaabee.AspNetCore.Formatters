@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
 namespace Zaabee.AspNetCore.Formatters.Protobuf
@@ -11,10 +12,12 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
         {
             if (string.IsNullOrWhiteSpace(contentType)) throw new ArgumentNullException(nameof(contentType));
             if (string.IsNullOrWhiteSpace(format)) throw new ArgumentNullException(nameof(format));
-            
-            options.InputFormatters.Add(new ProtobufInputFormatter());
-            options.OutputFormatters.Add(new ProtobufOutputFormatter(contentType));
-            options.FormatterMappings.SetMediaTypeMappingForFormat(format, MediaTypeHeaderValue.Parse(contentType));
+
+            var mediaTypeHeaderValue = MediaTypeHeaderValue.Parse((StringSegment) contentType).CopyAsReadOnly();
+
+            options.InputFormatters.Insert(options.InputFormatters.Count, new ProtobufInputFormatter(mediaTypeHeaderValue));
+            options.OutputFormatters.Insert(options.InputFormatters.Count, new ProtobufOutputFormatter(mediaTypeHeaderValue));
+            options.FormatterMappings.SetMediaTypeMappingForFormat(format, mediaTypeHeaderValue);
         }
     }
 }
