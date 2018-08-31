@@ -6,7 +6,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace Zaabee.AspNetCore.Formatters.Jil
 {
-    public class JilInputFormatter : InputFormatter
+    public class JilInputFormatter : TextInputFormatter
     {
         private readonly Options _jilOptions;
 
@@ -14,20 +14,15 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         {
             _jilOptions = jilOptions;
             SupportedMediaTypes.Add(mediaTypeHeaderValue);
+            SupportedEncodings.Add(UTF8EncodingWithoutBOM);
+            SupportedEncodings.Add(UTF16EncodingLittleEndian);
         }
 
-        public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
+        public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
         {
             var request = context.HttpContext.Request;
-            MediaTypeHeaderValue.TryParse(request.ContentType, out _);
-
-            using (var reader = context.ReaderFactory(request.Body, Encoding.UTF8))
+            using (var reader = context.ReaderFactory(request.Body, encoding))
                 return InputFormatterResult.SuccessAsync(JSON.Deserialize(reader, context.ModelType, _jilOptions));
-        }
-
-        public override bool CanRead(InputFormatterContext context)
-        {
-            return true;
         }
     }
 }

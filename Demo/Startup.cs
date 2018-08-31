@@ -22,12 +22,12 @@ namespace Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options =>
-            {
-                options.AddProtobufFormatter();
-                options.AddJilFormatter(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
-                    excludeNulls: true, includeInherited: true,
-                    serializationNameFormat: SerializationNameFormat.CamelCase));
-            })
+                {
+                    options.AddProtobufFormatter();
+                    options.AddJilFormatter(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
+                        excludeNulls: true, includeInherited: true,
+                        serializationNameFormat: SerializationNameFormat.CamelCase));
+                })
                 .AddXmlSerializerFormatters()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

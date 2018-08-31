@@ -79,7 +79,6 @@ namespace TestProject
             var client = _server.CreateClient();
             var dtos = GetDtos();
             var json = JsonConvert.SerializeObject(dtos);
-            
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")

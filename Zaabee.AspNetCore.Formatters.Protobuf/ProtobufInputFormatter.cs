@@ -27,11 +27,6 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
             return InputFormatterResult.SuccessAsync(result);
         }
 
-        public override bool CanRead(InputFormatterContext context)
-        {
-            return true;
-        }
-
         private static RuntimeTypeModel CreateTypeModel()
         {
             var typeModel = TypeModel.Create();
