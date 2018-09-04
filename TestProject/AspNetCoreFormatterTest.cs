@@ -83,7 +83,7 @@ namespace TestProject
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
-            httpRequestMessage.Headers.Add("Accept","application/json");
+            httpRequestMessage.Headers.Add("Accept", "application/json");
 
             // HTTP POST with Json Request Body
             var responseForPost = client.SendAsync(httpRequestMessage);
