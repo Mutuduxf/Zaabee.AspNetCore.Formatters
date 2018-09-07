@@ -19,11 +19,7 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
-            var type = context.ModelType;
-            var request = context.HttpContext.Request;
-            MediaTypeHeaderValue.TryParse(request.ContentType, out _);
-
-            var result = Model.Deserialize(context.HttpContext.Request.Body, null, type);
+            var result = Model.Deserialize(context.HttpContext.Request.Body, null, context.ModelType);
             return InputFormatterResult.SuccessAsync(result);
         }
 
