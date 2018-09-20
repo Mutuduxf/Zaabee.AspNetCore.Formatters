@@ -26,10 +26,17 @@ IterationCount=1000  RunStrategy=Throughput
 |     JsonPost | 651.2 us | 12.014 us | 114.88 us | 641.3 us | 462.8 us | 997.7 us |  22.56 KB |
 
   Mean      : Arithmetic mean of all measurements
+
   Error     : Half of 99.9% confidence interval
+
   StdDev    : Standard deviation of all measurements
+
   Median    : Value separating the higher half of all measurements (50th percentile)
+
   Min       : Minimum
+
   Max       : Maximum
+
   Allocated : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  
   1 us      : 1 Microsecond (0.000001 sec)
