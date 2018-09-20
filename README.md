@@ -8,8 +8,11 @@ Formatters for asp.net core
 ## Benchmark
 
 BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.254 (1803/April2018Update/Redstone4)
+
 Intel Core i7-6600U CPU 2.60GHz (Max: 0.80GHz) (Skylake), 1 CPU, 4 logical and 2 physical cores
+
 Frequency=2742190 Hz, Resolution=364.6720 ns, Timer=TSC
+
 .NET Core SDK=2.1.402
   [Host]     : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT  [AttachedDebugger]
   Job-PRXXZX : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
