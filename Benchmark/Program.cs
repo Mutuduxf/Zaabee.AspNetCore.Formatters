@@ -24,6 +24,7 @@ namespace Benchmark
         }
     }
 
+    [MemoryDiagnoser]
     [SimpleJob(RunStrategy.Throughput, targetCount: 1000)]
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class BenchMarkTest
