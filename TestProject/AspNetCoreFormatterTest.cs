@@ -10,6 +10,7 @@ using Demo;
 using Jil;
 using Newtonsoft.Json;
 using Xunit;
+using Zaabee.Protobuf;
 
 namespace TestProject
 {
@@ -29,9 +30,9 @@ namespace TestProject
             var client = _server.CreateClient();
             var dtos = GetDtos();
             var stream = new MemoryStream();
-            ProtoBuf.Serializer.Serialize(stream, dtos);
+            ProtobufHelper.Serialize(stream, dtos);
 
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StreamContent(stream)
             };
@@ -41,7 +42,7 @@ namespace TestProject
             // HTTP POST with Protobuf Request Body
             var responseForPost = client.SendAsync(httpRequestMessage);
 
-            var result = ProtoBuf.Serializer.Deserialize<List<TestDto>>(
+            var result = ProtobufHelper.Deserialize<List<TestDto>>(
                 responseForPost.Result.Content.ReadAsStreamAsync().Result);
 
             Assert.True(CompareDtos(dtos, result));
@@ -56,7 +57,7 @@ namespace TestProject
                 excludeNulls: true, includeInherited: true,
                 serializationNameFormat: SerializationNameFormat.CamelCase));
 
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/x-jil")
             };
@@ -79,7 +80,7 @@ namespace TestProject
             var client = _server.CreateClient();
             var dtos = GetDtos();
             var json = JsonConvert.SerializeObject(dtos);
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
