@@ -4,6 +4,7 @@ using Jil;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
+using Zaabee.Jil;
 
 namespace Zaabee.AspNetCore.Formatters.Jil
 {
@@ -22,7 +23,7 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
             var response = context.HttpContext.Response;
-            return response.WriteAsync(JSON.Serialize(context.Object, _jilOptions));
+            return response.WriteAsync(JilHelper.Serialize(context.Object, _jilOptions));
         }
     }
 }

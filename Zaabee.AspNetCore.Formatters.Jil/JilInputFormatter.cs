@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Jil;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
+using Zaabee.Jil;
 
 namespace Zaabee.AspNetCore.Formatters.Jil
 {
@@ -22,7 +23,7 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         {
             var request = context.HttpContext.Request;
             using (var reader = context.ReaderFactory(request.Body, encoding))
-                return InputFormatterResult.SuccessAsync(JSON.Deserialize(reader, context.ModelType, _jilOptions));
+                return InputFormatterResult.SuccessAsync(JilHelper.Deserialize(reader, context.ModelType, _jilOptions));
         }
     }
 }
