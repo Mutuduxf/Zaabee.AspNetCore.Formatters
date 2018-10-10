@@ -15,10 +15,8 @@ namespace Zaabee.AspNetCore.Formatters.Jil
             if (string.IsNullOrWhiteSpace(format)) throw new ArgumentNullException(nameof(format));
 
             var mediaTypeHeaderValue = MediaTypeHeaderValue.Parse((StringSegment) contentType).CopyAsReadOnly();
-            options.InputFormatters.Insert(options.InputFormatters.Count,
-                new JilInputFormatter(jilOptions, mediaTypeHeaderValue));
-            options.OutputFormatters.Insert(options.OutputFormatters.Count,
-                new JilOutputFormatter(jilOptions, mediaTypeHeaderValue));
+            options.InputFormatters.Add(new JilInputFormatter(jilOptions, mediaTypeHeaderValue));
+            options.OutputFormatters.Add(new JilOutputFormatter(jilOptions, mediaTypeHeaderValue));
             options.FormatterMappings.SetMediaTypeMappingForFormat(format, mediaTypeHeaderValue);
         }
     }
