@@ -40,10 +40,10 @@ namespace TestProject
             httpRequestMessage.Headers.Add("Accept", "application/x-protobuf");
 
             // HTTP POST with Protobuf Request Body
-            var responseForPost = client.SendAsync(httpRequestMessage);
+            var response = client.SendAsync(httpRequestMessage).Result;
 
             var result = ProtobufHelper.Deserialize<List<TestDto>>(
-                responseForPost.Result.Content.ReadAsStreamAsync().Result);
+                response.Content.ReadAsStreamAsync().Result);
 
             Assert.True(CompareDtos(dtos, result));
         }
@@ -87,10 +87,10 @@ namespace TestProject
             httpRequestMessage.Headers.Add("Accept", "application/json");
 
             // HTTP POST with Json Request Body
-            var responseForPost = client.SendAsync(httpRequestMessage);
+            var response = client.SendAsync(httpRequestMessage).Result;
 
             var result =
-                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+                JsonConvert.DeserializeObject<List<TestDto>>(response.Content.ReadAsStringAsync().Result);
 
             Assert.True(CompareDtos(dtos, result));
         }
