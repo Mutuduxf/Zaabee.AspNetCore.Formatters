@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
@@ -14,7 +15,15 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
-            var result = ProtobufHelper.Deserialize(context.HttpContext.Request.Body, context.ModelType);
+            var bytes = new List<byte>();
+            var next = context.HttpContext.Request.Body.ReadByte();
+            while (next != -1)
+            {
+                bytes.Add((byte) next);
+                next = context.HttpContext.Request.Body.ReadByte();
+            }
+
+            var result = ProtobufHelper.Deserialize(bytes.ToArray(), context.ModelType);
             return InputFormatterResult.SuccessAsync(result);
         }
     }

@@ -12,6 +12,8 @@ using Jil;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using Zaabee.Jil;
+using Zaabee.Protobuf;
 
 namespace Benchmark
 {
@@ -47,7 +49,7 @@ namespace Benchmark
         [Benchmark]
         public void JilPost()
         {
-            var json = JSON.Serialize(_dtos, new Options(dateFormat: DateTimeFormat.ISO8601,
+            var json = JilHelper.Serialize(_dtos, new Options(dateFormat: DateTimeFormat.ISO8601,
                 excludeNulls: true, includeInherited: true,
                 serializationNameFormat: SerializationNameFormat.CamelCase));
 
@@ -60,7 +62,7 @@ namespace Benchmark
             var response = _jilHttpClient.SendAsync(httpRequestMessage).Result;
 
             var result =
-                JSON.Deserialize<List<TestDto>>(response.Content.ReadAsStringAsync()
+                JilHelper.Deserialize<List<TestDto>>(response.Content.ReadAsStringAsync()
                     .Result, new Options(dateFormat: DateTimeFormat.ISO8601,
                     excludeNulls: true, includeInherited: true,
                     serializationNameFormat: SerializationNameFormat.CamelCase));
@@ -70,7 +72,7 @@ namespace Benchmark
         public void ProtobufPost()
         {
             var stream = new MemoryStream();
-            ProtoBuf.Serializer.Serialize(stream, _dtos);
+            ProtobufHelper.Serialize(stream, _dtos);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
             {
@@ -82,7 +84,7 @@ namespace Benchmark
             // HTTP POST with Protobuf Request Body
             var responseForPost = _protobufHttpClient.SendAsync(httpRequestMessage);
 
-            var result = ProtoBuf.Serializer.Deserialize<List<TestDto>>(
+            var result = ProtobufHelper.Deserialize<List<TestDto>>(
                 responseForPost.Result.Content.ReadAsStreamAsync().Result);
         }
 
