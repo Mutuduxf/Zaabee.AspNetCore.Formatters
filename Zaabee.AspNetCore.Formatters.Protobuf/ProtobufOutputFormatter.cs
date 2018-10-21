@@ -16,7 +16,7 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
         {
             var response = context.HttpContext.Response;
             ProtobufHelper.Serialize(response.Body, context.Object);
-            return Task.FromResult(response);
+            return Task.CompletedTask;
         }
     }
 }
