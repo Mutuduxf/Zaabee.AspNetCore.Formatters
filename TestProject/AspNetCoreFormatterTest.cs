@@ -31,7 +31,7 @@ namespace TestProject
             var dtos = GetDtos();
             var stream = new MemoryStream();
             ProtobufHelper.Serialize(stream, dtos);
-
+            stream.Seek(0, SeekOrigin.Begin);
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StreamContent(stream)

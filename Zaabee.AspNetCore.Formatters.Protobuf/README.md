@@ -1,6 +1,6 @@
 # Zaabee.AspNetCore.Protobuf
 
-Protobuf formatters for asp.net core
+Protobuf formatters for asp.net core witch can serialize the model without attributes(the type must be determined before compilate).
 
 ## QuickStart
 
@@ -33,15 +33,14 @@ Now you can send a request with content-type header "application/x-protobuf" to 
 Create an asp.net core project and import the Zaabee.AspNetCoreProtobuf from nuget as above,and add class and enum for test like this
 
 ```CSharp
-[ProtoContract]
 public class TestDto
 {
-    [ProtoMember(1)] public Guid Id { get; set; }
-    [ProtoMember(2)] public string Name { get; set; }
-    [ProtoMember(3)] public DateTime CreateTime { get; set; }
-    [ProtoMember(4)] public List<TestDto> Kids { get; set; }
-    [ProtoMember(5)] public long Tag { get; set; }
-    [ProtoMember(6)] public TestEnum Enum { get; set; }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public DateTime CreateTime { get; set; }
+    public List<TestDto> Kids { get; set; }
+    public long Tag { get; set; }
+    public TestEnum Enum { get; set; }
 }
 
 public enum TestEnum
@@ -88,14 +87,23 @@ public class AspNetCoreProtobufTest
     }
 
     [Fact]
-    public async Task Test()
+    public Task Test()
     {
-        // Act
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-protobuf"));
-        var response = await _client.GetAsync("/api/values");
-        response.EnsureSuccessStatusCode();
+        var stream = new MemoryStream();
+        ProtobufHelper.Serialize(stream, _dtos);
+        stream.Seek(0, SeekOrigin.Begin);
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+        {
+            Content = new StreamContent(stream)
+        };
+        httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-protobuf");
+        httpRequestMessage.Headers.Add("Accept", "application/x-protobuf");
 
-        var result = ProtoBuf.Serializer.Deserialize<List<TestDto>>(await response.Content.ReadAsStreamAsync());
+        // HTTP POST with Protobuf Request Body
+        var responseForPost = _protobufHttpClient.SendAsync(httpRequestMessage);
+
+        var result = ProtobufHelper.Deserialize<List<TestDto>>(
+            responseForPost.Result.Content.ReadAsStreamAsync().Result);
 
         // Assert
         Assert.Equal("application/x-protobuf", response.Content.Headers.ContentType.MediaType);

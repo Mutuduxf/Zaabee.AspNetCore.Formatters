@@ -73,7 +73,7 @@ namespace Benchmark
         {
             var stream = new MemoryStream();
             ProtobufHelper.Serialize(stream, _dtos);
-
+            stream.Seek(0, SeekOrigin.Begin);
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
             {
                 Content = new StreamContent(stream)
