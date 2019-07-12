@@ -14,8 +14,7 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            var response = context.HttpContext.Response;
-            ProtobufHelper.Serialize(response.Body, context.Object);
+            context.HttpContext.Response.Body.PackByProtobuf(context.Object);
             return Task.CompletedTask;
         }
     }

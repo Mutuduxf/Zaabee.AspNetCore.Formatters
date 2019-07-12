@@ -14,7 +14,7 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
-            var result = ProtobufHelper.Deserialize(context.HttpContext.Request.Body, context.ModelType);
+            var result = context.HttpContext.Request.Body.FromProtobuf(context.ModelType);
             return InputFormatterResult.SuccessAsync(result);
         }
     }
