@@ -7,10 +7,7 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
 {
     public class ProtobufInputFormatter : InputFormatter
     {
-        public ProtobufInputFormatter(MediaTypeHeaderValue contentType)
-        {
-            SupportedMediaTypes.Add(contentType);
-        }
+        public ProtobufInputFormatter(MediaTypeHeaderValue contentType) => SupportedMediaTypes.Add(contentType);
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
