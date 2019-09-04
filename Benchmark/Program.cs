@@ -22,7 +22,6 @@ namespace Benchmark
         static void Main(string[] args)
         {
             var summary = BenchmarkRunner.Run<BenchMarkTest>();
-            Console.ReadLine();
         }
     }
 
@@ -35,6 +34,10 @@ namespace Benchmark
         private static HttpClient _jilHttpClient;
         private static HttpClient _protobufHttpClient;
         private static HttpClient _jsonHttpClient;
+        private static HttpClient _msgPackClient;
+        private static HttpClient _utf8JsonClient;
+        private static HttpClient _zeroFormatterClient;
+        
         private static List<TestDto> _dtos;
 
         public BenchMarkTest()
@@ -43,6 +46,9 @@ namespace Benchmark
             _jilHttpClient = _jilHttpClient ?? _server.CreateClient();
             _protobufHttpClient = _protobufHttpClient ?? _server.CreateClient();
             _jsonHttpClient = _jsonHttpClient ?? _server.CreateClient();
+            _msgPackClient = _msgPackClient ?? _server.CreateClient();
+            _utf8JsonClient = _utf8JsonClient ?? _server.CreateClient();
+            _zeroFormatterClient = _zeroFormatterClient ?? _server.CreateClient();
             _dtos = _dtos ?? GetDtos();
         }
 
@@ -97,6 +103,57 @@ namespace Benchmark
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
             httpRequestMessage.Headers.Add("Accept", "application/json");
+
+            // HTTP POST with Json Request Body
+            var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
+
+            var result =
+                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+        }
+
+        [Benchmark]
+        public void MsgPackPost()
+        {
+            var json = JsonConvert.SerializeObject(_dtos);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/x-msgpack")
+            };
+            httpRequestMessage.Headers.Add("Accept", "application/x-msgpack");
+
+            // HTTP POST with Json Request Body
+            var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
+
+            var result =
+                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+        }
+
+        [Benchmark]
+        public void Utf8JsonPost()
+        {
+            var json = JsonConvert.SerializeObject(_dtos);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/x-utf8json")
+            };
+            httpRequestMessage.Headers.Add("Accept", "application/x-utf8json");
+
+            // HTTP POST with Json Request Body
+            var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
+
+            var result =
+                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+        }
+
+        [Benchmark]
+        public void ZeroFormatterPost()
+        {
+            var json = JsonConvert.SerializeObject(_dtos);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/x-zeroformatter")
+            };
+            httpRequestMessage.Headers.Add("Accept", "application/x-zeroformatter");
 
             // HTTP POST with Json Request Body
             var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
