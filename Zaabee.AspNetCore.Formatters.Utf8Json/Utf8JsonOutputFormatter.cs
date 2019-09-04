@@ -19,7 +19,7 @@ namespace Zaabee.AspNetCore.Formatters.Utf8Json
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
             var response = context.HttpContext.Response;
-            return response.WriteAsync(context.Object.Utf8JsonToString());
+            return response.WriteAsync(context.Object.ToJson());
         }
     }
 }

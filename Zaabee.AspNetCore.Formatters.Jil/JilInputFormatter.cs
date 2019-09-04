@@ -24,7 +24,7 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         {
             var request = context.HttpContext.Request;
             using (var reader = context.ReaderFactory(request.Body, encoding))
-                return InputFormatterResult.SuccessAsync(reader.FromJil(context.ModelType, _jilOptions));
+                return InputFormatterResult.SuccessAsync(reader.FromJson(context.ModelType, _jilOptions));
         }
     }
 }

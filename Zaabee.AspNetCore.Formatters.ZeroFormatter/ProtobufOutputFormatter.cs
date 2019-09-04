@@ -11,7 +11,7 @@ namespace Zaabee.AspNetCore.Formatters.ZeroFormatter
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            context.HttpContext.Response.Body.PackByZeroFormatter(context.Object);
+            context.HttpContext.Response.Body.PackBy(context.Object);
             return Task.CompletedTask;
         }
     }

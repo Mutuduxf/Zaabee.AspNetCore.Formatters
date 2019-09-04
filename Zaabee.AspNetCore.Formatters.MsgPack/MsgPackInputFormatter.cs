@@ -11,7 +11,7 @@ namespace Zaabee.AspNetCore.Formatters.MsgPack
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
-            var result = context.HttpContext.Request.Body.FromMsgPak(context.ModelType);
+            var result = context.HttpContext.Request.Body.Unpack(context.ModelType);
             return InputFormatterResult.SuccessAsync(result);
         }
     }

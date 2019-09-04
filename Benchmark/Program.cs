@@ -49,7 +49,7 @@ namespace Benchmark
         [Benchmark]
         public void JilPost()
         {
-            var json = JilHelper.Serialize(_dtos, new Options(dateFormat: DateTimeFormat.ISO8601,
+            var json = JilHelper.SerializeToJson(_dtos, new Options(dateFormat: DateTimeFormat.ISO8601,
                 excludeNulls: true, includeInherited: true,
                 serializationNameFormat: SerializationNameFormat.CamelCase));
 
@@ -72,7 +72,7 @@ namespace Benchmark
         public void ProtobufPost()
         {
             var stream = new MemoryStream();
-            ProtobufHelper.Serialize(stream, _dtos);
+            stream.PackBy(_dtos);
             stream.Seek(0, SeekOrigin.Begin);
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
             {
@@ -84,7 +84,7 @@ namespace Benchmark
             // HTTP POST with Protobuf Request Body
             var responseForPost = _protobufHttpClient.SendAsync(httpRequestMessage);
 
-            var result = ProtobufHelper.Deserialize<List<TestDto>>(
+            var result = ProtobufHelper.Unpack<List<TestDto>>(
                 responseForPost.Result.Content.ReadAsStreamAsync().Result);
         }
 

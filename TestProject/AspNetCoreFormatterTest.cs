@@ -30,7 +30,7 @@ namespace TestProject
             var client = _server.CreateClient();
             var dtos = GetDtos();
             var stream = new MemoryStream();
-            ProtobufHelper.Serialize(stream, dtos);
+            stream.PackBy(dtos);
             stream.Seek(0, SeekOrigin.Begin);
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
@@ -42,8 +42,7 @@ namespace TestProject
             // HTTP POST with Protobuf Request Body
             var response = client.SendAsync(httpRequestMessage).Result;
 
-            var result = ProtobufHelper.Deserialize<List<TestDto>>(
-                response.Content.ReadAsStreamAsync().Result);
+            var result = ProtobufHelper.Unpack<List<TestDto>>(response.Content.ReadAsStreamAsync().Result);
 
             Assert.True(CompareDtos(dtos, result));
         }
@@ -61,10 +60,10 @@ namespace TestProject
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/x-jil")
             };
-            httpRequestMessage.Headers.Add("Accept","application/x-jil");
+            httpRequestMessage.Headers.Add("Accept", "application/x-jil");
 
             var response = client.SendAsync(httpRequestMessage).Result;
-            
+
             var result =
                 JSON.Deserialize<List<TestDto>>(response.Content.ReadAsStringAsync()
                     .Result, new Options(dateFormat: DateTimeFormat.ISO8601,

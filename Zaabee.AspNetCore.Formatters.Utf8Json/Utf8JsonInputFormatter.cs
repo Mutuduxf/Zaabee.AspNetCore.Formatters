@@ -19,7 +19,7 @@ namespace Zaabee.AspNetCore.Formatters.Utf8Json
             Encoding encoding)
         {
             var request = context.HttpContext.Request;
-            return InputFormatterResult.SuccessAsync(request.Body.FromUtf8Json(context.ModelType));
+            return InputFormatterResult.SuccessAsync(request.Body.Unpack(context.ModelType));
         }
     }
 }
