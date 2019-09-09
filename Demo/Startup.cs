@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Zaabee.AspNetCore.Formatters.Jil;
+using Zaabee.AspNetCore.Formatters.MsgPack;
 using Zaabee.AspNetCore.Formatters.Protobuf;
+using Zaabee.AspNetCore.Formatters.Utf8Json;
+using Zaabee.AspNetCore.Formatters.ZeroFormatter;
 
 namespace Demo
 {
@@ -27,6 +30,9 @@ namespace Demo
                     options.AddJilFormatter(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
                         excludeNulls: true, includeInherited: true,
                         serializationNameFormat: SerializationNameFormat.CamelCase));
+                    options.AddMsgPackFormatter();
+                    options.AddUtf8JsonFormatter();
+                    options.AddZeroFormatter();
                 })
                 .AddXmlSerializerFormatters()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

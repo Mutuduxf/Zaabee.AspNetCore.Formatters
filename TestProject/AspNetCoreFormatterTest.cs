@@ -118,9 +118,9 @@ namespace TestProject
                     dtoOne.CreateTime.ToUniversalTime() != dtoTwo.CreateTime.ToUniversalTime() ||
                     dtoOne.Enum != dtoTwo.Enum ||
                     dtoOne.Name != dtoTwo.Name ||
-                    dtoOne.Tag != dtoTwo.Tag ||
+                    dtoOne.Tag != dtoTwo.Tag )
 //                    dtoOne.TestTime != dtoTwo.TestTime ||
-                    !CompareDtos(dtoOne.Kids, dtoTwo.Kids))
+//                    !CompareDtos(dtoOne.Kids, dtoTwo.Kids))
                     return false;
             }
 
@@ -139,27 +139,27 @@ namespace TestProject
 //                    TestTime = DateTimeOffset.Now,
                     Name = "0",
                     Enum = TestEnum.Apple,
-                    Kids = new List<TestDto>
-                    {
-                        new TestDto
-                        {
-                            Id = Guid.NewGuid(),
-                            Tag = long.MaxValue - 1,
-                            CreateTime = DateTime.Now,
-//                            TestTime = DateTimeOffset.Now,
-                            Name = "00",
-                            Enum = TestEnum.Banana
-                        },
-                        new TestDto
-                        {
-                            Id = Guid.NewGuid(),
-                            Tag = long.MaxValue - 2,
-                            CreateTime = DateTime.Now,
-//                            TestTime = DateTimeOffset.Now,
-                            Name = "01",
-                            Enum = TestEnum.Pear
-                        }
-                    }
+//                    Kids = new List<TestDto>
+//                    {
+//                        new TestDto
+//                        {
+//                            Id = Guid.NewGuid(),
+//                            Tag = long.MaxValue - 1,
+//                            CreateTime = DateTime.Now,
+////                            TestTime = DateTimeOffset.Now,
+//                            Name = "00",
+//                            Enum = TestEnum.Banana
+//                        },
+//                        new TestDto
+//                        {
+//                            Id = Guid.NewGuid(),
+//                            Tag = long.MaxValue - 2,
+//                            CreateTime = DateTime.Now,
+////                            TestTime = DateTimeOffset.Now,
+//                            Name = "01",
+//                            Enum = TestEnum.Pear
+//                        }
+//                    }
                 },
                 new TestDto
                 {
@@ -169,27 +169,27 @@ namespace TestProject
 //                    TestTime = DateTimeOffset.Now,
                     Name = "1",
                     Enum = TestEnum.Apple,
-                    Kids = new List<TestDto>
-                    {
-                        new TestDto
-                        {
-                            Id = Guid.NewGuid(),
-                            Tag = long.MaxValue - 4,
-                            CreateTime = DateTime.Now,
-//                            TestTime = DateTimeOffset.Now,
-                            Name = "10",
-                            Enum = TestEnum.Banana
-                        },
-                        new TestDto
-                        {
-                            Id = Guid.NewGuid(),
-                            Tag = long.MaxValue - 5,
-                            CreateTime = DateTime.Now,
-//                            TestTime = DateTimeOffset.Now,
-                            Name = "11",
-                            Enum = TestEnum.Pear
-                        }
-                    }
+//                    Kids = new List<TestDto>
+//                    {
+//                        new TestDto
+//                        {
+//                            Id = Guid.NewGuid(),
+//                            Tag = long.MaxValue - 4,
+//                            CreateTime = DateTime.Now,
+////                            TestTime = DateTimeOffset.Now,
+//                            Name = "10",
+//                            Enum = TestEnum.Banana
+//                        },
+//                        new TestDto
+//                        {
+//                            Id = Guid.NewGuid(),
+//                            Tag = long.MaxValue - 5,
+//                            CreateTime = DateTime.Now,
+////                            TestTime = DateTimeOffset.Now,
+//                            Name = "11",
+//                            Enum = TestEnum.Pear
+//                        }
+//                    }
                 }
             };
         }

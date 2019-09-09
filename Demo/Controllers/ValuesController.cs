@@ -16,13 +16,19 @@ namespace Demo.Controllers
 
         [HttpGet]
         [HttpPost]
-        public IEnumerable<TestDto> Test(int quantity)
+        public IList<TestDto> Test(int quantity)
         {
             return CreateDtos(quantity);
         }
 
+        [HttpGet]
         [HttpPost]
-        private static IEnumerable<TestDto> CreateDtos(int quantity)
+        public TestDto TestSimple()
+        {
+            return CreateDtos(1).First();
+        }
+
+        private static IList<TestDto> CreateDtos(int quantity)
         {
             return Enumerable.Range(0, quantity <= 0 ? 10 : quantity).Select(p => new TestDto
             {
@@ -30,7 +36,7 @@ namespace Demo.Controllers
                 CreateTime = DateTime.Now,
                 Enum = TestEnum.Apple,
                 Name = Guid.NewGuid().ToString()
-            });
+            }).ToList();
         }
     }
 }
