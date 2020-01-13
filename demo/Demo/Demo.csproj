@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="wwwroot\" />
@@ -12,10 +12,10 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Zaabee.AspNetCore.Formatters.Jil\Zaabee.AspNetCore.Formatters.Jil.csproj" />
-      <ProjectReference Include="..\Zaabee.AspNetCore.Formatters.MsgPack\Zaabee.AspNetCore.Formatters.MsgPack.csproj" />
-      <ProjectReference Include="..\Zaabee.AspNetCore.Formatters.Protobuf\Zaabee.AspNetCore.Formatters.Protobuf.csproj" />
-      <ProjectReference Include="..\Zaabee.AspNetCore.Formatters.Utf8Json\Zaabee.AspNetCore.Formatters.Utf8Json.csproj" />
-      <ProjectReference Include="..\Zaabee.AspNetCore.Formatters.ZeroFormatter\Zaabee.AspNetCore.Formatters.ZeroFormatter.csproj" />
+      <ProjectReference Include="..\..\src\Zaabee.AspNetCore.Formatters.Jil\Zaabee.AspNetCore.Formatters.Jil.csproj" />
+      <ProjectReference Include="..\..\src\Zaabee.AspNetCore.Formatters.MsgPack\Zaabee.AspNetCore.Formatters.MsgPack.csproj" />
+      <ProjectReference Include="..\..\src\Zaabee.AspNetCore.Formatters.Protobuf\Zaabee.AspNetCore.Formatters.Protobuf.csproj" />
+      <ProjectReference Include="..\..\src\Zaabee.AspNetCore.Formatters.Utf8Json\Zaabee.AspNetCore.Formatters.Utf8Json.csproj" />
+      <ProjectReference Include="..\..\src\Zaabee.AspNetCore.Formatters.ZeroFormatter\Zaabee.AspNetCore.Formatters.ZeroFormatter.csproj" />
     </ItemGroup>
 </Project>
