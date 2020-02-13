@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Running;
@@ -13,7 +14,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Zaabee.Jil;
+using Zaabee.MsgPack;
 using Zaabee.Protobuf;
+using Zaabee.Utf8Json;
+using Zaabee.ZeroFormatter;
 
 namespace Benchmark
 {
@@ -53,34 +57,30 @@ namespace Benchmark
         }
 
         [Benchmark]
-        public void JilPost()
+        public async Task JilPost()
         {
-            var json = JilHelper.SerializeToJson(_dtos, new Options(dateFormat: DateTimeFormat.ISO8601,
-                excludeNulls: true, includeInherited: true,
-                serializationNameFormat: SerializationNameFormat.CamelCase));
+            var options = new Options(dateFormat: DateTimeFormat.ISO8601, excludeNulls: true, includeInherited: true,
+                serializationNameFormat: SerializationNameFormat.CamelCase);
+            var json = JilSerializer.SerializeToJson(_dtos, options);
 
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/x-jil")
             };
             httpRequestMessage.Headers.Add("Accept", "application/x-jil");
 
-            var response = _jilHttpClient.SendAsync(httpRequestMessage).Result;
+            var response = await _jilHttpClient.SendAsync(httpRequestMessage);
 
-            var result =
-                JilHelper.Deserialize<List<TestDto>>(response.Content.ReadAsStringAsync()
-                    .Result, new Options(dateFormat: DateTimeFormat.ISO8601,
-                    excludeNulls: true, includeInherited: true,
-                    serializationNameFormat: SerializationNameFormat.CamelCase));
+            var result = JilSerializer.Deserialize<List<TestDto>>(await response.Content.ReadAsStringAsync(), options);
         }
 
         [Benchmark]
-        public void ProtobufPost()
+        public async Task ProtobufPost()
         {
             var stream = new MemoryStream();
-            stream.PackBy(_dtos);
+            ProtobufSerializer.Pack(_dtos, stream);
             stream.Seek(0, SeekOrigin.Begin);
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StreamContent(stream)
             };
@@ -88,78 +88,80 @@ namespace Benchmark
             httpRequestMessage.Headers.Add("Accept", "application/x-protobuf");
 
             // HTTP POST with Protobuf Request Body
-            var responseForPost = _protobufHttpClient.SendAsync(httpRequestMessage);
+            var response = await _protobufHttpClient.SendAsync(httpRequestMessage);
 
-            var result = ProtobufHelper.Unpack<List<TestDto>>(
-                responseForPost.Result.Content.ReadAsStreamAsync().Result);
+            var result = ProtobufSerializer.Unpack<List<TestDto>>(await response.Content.ReadAsStreamAsync());
         }
 
         [Benchmark]
-        public void JsonPost()
+        public async Task JsonPost()
         {
             var json = JsonConvert.SerializeObject(_dtos);
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
             httpRequestMessage.Headers.Add("Accept", "application/json");
 
             // HTTP POST with Json Request Body
-            var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
+            var response = await _jsonHttpClient.SendAsync(httpRequestMessage);
 
-            var result =
-                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+            var result = JsonConvert.DeserializeObject<List<TestDto>>(await response.Content.ReadAsStringAsync());
         }
 
         [Benchmark]
-        public void MsgPackPost()
+        public async Task MsgPackPost()
         {
-            var json = JsonConvert.SerializeObject(_dtos);
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var stream = new MemoryStream();
+            MsgPackSerializer.Pack(_dtos, stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
-                Content = new StringContent(json, Encoding.UTF8, "application/x-msgpack")
+                Content = new StreamContent(stream)
             };
+            httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-msgpack");
             httpRequestMessage.Headers.Add("Accept", "application/x-msgpack");
 
-            // HTTP POST with Json Request Body
-            var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
+            // HTTP POST with Protobuf Request Body
+            var response = await _msgPackClient.SendAsync(httpRequestMessage);
 
-            var result =
-                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+            var result = MsgPackSerializer.Unpack<List<TestDto>>(await response.Content.ReadAsStreamAsync());
         }
 
         [Benchmark]
-        public void Utf8JsonPost()
+        public async Task Utf8JsonPost()
         {
-            var json = JsonConvert.SerializeObject(_dtos);
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var json = Utf8JsonSerializer.SerializeToJson(_dtos, null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/x-utf8json")
             };
             httpRequestMessage.Headers.Add("Accept", "application/x-utf8json");
 
-            // HTTP POST with Json Request Body
-            var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
+            var response = await _utf8JsonClient.SendAsync(httpRequestMessage);
 
             var result =
-                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+                Utf8JsonSerializer.Deserialize<List<TestDto>>(await response.Content.ReadAsStringAsync(), null);
         }
 
         [Benchmark]
-        public void ZeroFormatterPost()
+        public async Task ZeroFormatterPost()
         {
-            var json = JsonConvert.SerializeObject(_dtos);
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values")
+            var stream = new MemoryStream();
+            ZeroSerializer.Pack(_dtos, stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
-                Content = new StringContent(json, Encoding.UTF8, "application/x-zeroformatter")
+                Content = new StreamContent(stream)
             };
+            httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-zeroformatter");
             httpRequestMessage.Headers.Add("Accept", "application/x-zeroformatter");
 
-            // HTTP POST with Json Request Body
-            var responseForPost = _jsonHttpClient.SendAsync(httpRequestMessage);
+            // HTTP POST with Protobuf Request Body
+            var response = await _zeroFormatterClient.SendAsync(httpRequestMessage);
 
-            var result =
-                JsonConvert.DeserializeObject<List<TestDto>>(responseForPost.Result.Content.ReadAsStringAsync().Result);
+            var result = ZeroSerializer.Unpack<List<TestDto>>(await response.Content.ReadAsStreamAsync());
         }
 
         private static List<TestDto> GetDtos()
