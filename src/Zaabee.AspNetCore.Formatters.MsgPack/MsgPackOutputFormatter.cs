@@ -11,7 +11,7 @@ namespace Zaabee.AspNetCore.Formatters.MsgPack
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            context.HttpContext.Response.Body.PackBy(context.Object);
+            MsgPackSerializer.Pack(context.Object, context.HttpContext.Response.Body);
             return Task.CompletedTask;
         }
     }

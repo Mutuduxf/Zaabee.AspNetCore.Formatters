@@ -6,11 +6,15 @@ using Microsoft.AspNetCore.TestHost;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Demo;
 using Jil;
 using Newtonsoft.Json;
 using Xunit;
+using Zaabee.Jil;
 using Zaabee.Protobuf;
+using Zaabee.Utf8Json;
+using Zaabee.ZeroFormatter;
 
 namespace TestProject
 {
@@ -25,12 +29,12 @@ namespace TestProject
         }
 
         [Fact]
-        public void TestProtobuf()
+        public async Task TestProtobuf()
         {
             var client = _server.CreateClient();
             var dtos = GetDtos();
             var stream = new MemoryStream();
-            stream.PackBy(dtos);
+            ProtobufSerializer.Pack(dtos, stream);
             stream.Seek(0, SeekOrigin.Begin);
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
@@ -40,21 +44,21 @@ namespace TestProject
             httpRequestMessage.Headers.Add("Accept", "application/x-protobuf");
 
             // HTTP POST with Protobuf Request Body
-            var response = client.SendAsync(httpRequestMessage).Result;
+            var response = await client.SendAsync(httpRequestMessage);
 
-            var result = ProtobufHelper.Unpack<List<TestDto>>(response.Content.ReadAsStreamAsync().Result);
+            var result = ProtobufSerializer.Unpack<List<TestDto>>(await response.Content.ReadAsStreamAsync());
 
             Assert.True(CompareDtos(dtos, result));
         }
 
         [Fact]
-        public void TestJil()
+        public async Task TestJil()
         {
             var client = _server.CreateClient();
             var dtos = GetDtos();
-            var json = JSON.Serialize(dtos, new Options(dateFormat: DateTimeFormat.ISO8601,
-                excludeNulls: true, includeInherited: true,
-                serializationNameFormat: SerializationNameFormat.CamelCase));
+            var options = new Options(dateFormat: DateTimeFormat.ISO8601, excludeNulls: true, includeInherited: true,
+                serializationNameFormat: SerializationNameFormat.CamelCase);
+            var json = JilSerializer.SerializeToJson(dtos, options);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
@@ -62,19 +66,36 @@ namespace TestProject
             };
             httpRequestMessage.Headers.Add("Accept", "application/x-jil");
 
-            var response = client.SendAsync(httpRequestMessage).Result;
+            var response = await client.SendAsync(httpRequestMessage);
 
-            var result =
-                JSON.Deserialize<List<TestDto>>(response.Content.ReadAsStringAsync()
-                    .Result, new Options(dateFormat: DateTimeFormat.ISO8601,
-                    excludeNulls: true, includeInherited: true,
-                    serializationNameFormat: SerializationNameFormat.CamelCase));
+            var result = JilSerializer.Deserialize<List<TestDto>>(await response.Content.ReadAsStringAsync(), options);
 
             Assert.True(CompareDtos(dtos, result));
         }
 
         [Fact]
-        public void TestJson()
+        public async Task TestUtf8Json()
+        {
+            var client = _server.CreateClient();
+            var dtos = GetDtos();
+            var json = Utf8JsonSerializer.SerializeToJson(dtos, null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/x-utf8json")
+            };
+            httpRequestMessage.Headers.Add("Accept", "application/x-utf8json");
+
+            var response = await client.SendAsync(httpRequestMessage);
+
+            var result =
+                Utf8JsonSerializer.Deserialize<List<TestDto>>(await response.Content.ReadAsStringAsync(), null);
+
+            Assert.True(CompareDtos(dtos, result));
+        }
+
+        [Fact]
+        public async Task TestJson()
         {
             var client = _server.CreateClient();
             var dtos = GetDtos();
@@ -86,10 +107,32 @@ namespace TestProject
             httpRequestMessage.Headers.Add("Accept", "application/json");
 
             // HTTP POST with Json Request Body
-            var response = client.SendAsync(httpRequestMessage).Result;
+            var response = await client.SendAsync(httpRequestMessage);
 
-            var result =
-                JsonConvert.DeserializeObject<List<TestDto>>(response.Content.ReadAsStringAsync().Result);
+            var result = JsonConvert.DeserializeObject<List<TestDto>>(await response.Content.ReadAsStringAsync());
+
+            Assert.True(CompareDtos(dtos, result));
+        }
+
+        [Fact]
+        public async Task TestZeroFormatter()
+        {
+            var client = _server.CreateClient();
+            var dtos = GetDtos();
+            var stream = new MemoryStream();
+            ZeroSerializer.Pack(dtos, stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
+            {
+                Content = new StreamContent(stream)
+            };
+            httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-zeroformatter");
+            httpRequestMessage.Headers.Add("Accept", "application/x-zeroformatter");
+
+            // HTTP POST with Protobuf Request Body
+            var response = await client.SendAsync(httpRequestMessage);
+
+            var result = ZeroSerializer.Unpack<List<TestDto>>(await response.Content.ReadAsStreamAsync());
 
             Assert.True(CompareDtos(dtos, result));
         }
@@ -118,7 +161,7 @@ namespace TestProject
                     dtoOne.CreateTime.ToUniversalTime() != dtoTwo.CreateTime.ToUniversalTime() ||
                     dtoOne.Enum != dtoTwo.Enum ||
                     dtoOne.Name != dtoTwo.Name ||
-                    dtoOne.Tag != dtoTwo.Tag )
+                    dtoOne.Tag != dtoTwo.Tag)
 //                    dtoOne.TestTime != dtoTwo.TestTime ||
 //                    !CompareDtos(dtoOne.Kids, dtoTwo.Kids))
                     return false;

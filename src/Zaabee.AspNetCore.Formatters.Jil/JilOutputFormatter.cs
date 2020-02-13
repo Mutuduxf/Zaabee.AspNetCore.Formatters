@@ -23,7 +23,7 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
             var response = context.HttpContext.Response;
-            return response.WriteAsync(context.Object.ToJson(_jilOptions));
+            return response.WriteAsync(JilSerializer.SerializeToJson(context.Object, _jilOptions));
         }
     }
 }

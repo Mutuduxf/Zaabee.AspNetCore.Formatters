@@ -3,19 +3,19 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>1.0.1</PackageVersion>
-        <Version>1.0.1</Version>
+        <PackageVersion>2.0.0</PackageVersion>
+        <Version>2.0.0</Version>
         <Authors>Mutuduxf</Authors>
         <Company>Mutuduxf</Company>
         <PackageTags>Zaabee asp.net core ZeroFormatter</PackageTags>
         <PackageProjectUrl>https://github.com/Mutuduxf/Zaabee.AspNetCore.Formatters</PackageProjectUrl>
-        <PackagelicenseUrl>https://raw.githubusercontent.com/Mutuduxf/Zaabee.AspNetCore.Formatters/master/LICENSE</PackagelicenseUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>Formatters for asp.net core base by ZeroFormatter.</Description>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-      <PackageReference Include="Zaabee.ZeroFormatter" Version="2.1.2" />
+      <PackageReference Include="Zaabee.ZeroFormatter" Version="3.0.0" />
     </ItemGroup>
 
 </Project>

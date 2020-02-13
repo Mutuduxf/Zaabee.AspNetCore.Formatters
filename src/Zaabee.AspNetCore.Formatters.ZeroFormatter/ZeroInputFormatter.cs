@@ -11,7 +11,7 @@ namespace Zaabee.AspNetCore.Formatters.ZeroFormatter
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
-            var result = context.HttpContext.Request.Body.Unpack(context.ModelType);
+            var result = ZeroSerializer.Unpack(context.ModelType, context.HttpContext.Request.Body);
             return InputFormatterResult.SuccessAsync(result);
         }
     }
