@@ -8,36 +8,19 @@ Formatters for asp.net core
 
 ## Benchmark
 
-BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.254 (1803/April2018Update/Redstone4)
+BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18363
+Intel Core i7-6600U CPU 2.60GHz (Skylake), 1 CPU, 4 logical and 2 physical cores
+.NET Core SDK=3.1.100
+  [Host]     : .NET Core 2.1.14 (CoreCLR 4.6.28207.04, CoreFX 4.6.28208.01), X64 RyuJIT
+  Job-JJZMXO : .NET Core 2.1.14 (CoreCLR 4.6.28207.04, CoreFX 4.6.28208.01), X64 RyuJIT
 
-Intel Core i7-6600U CPU 2.60GHz (Max: 0.80GHz) (Skylake), 1 CPU, 4 logical and 2 physical cores
+IterationCount=10000  RunStrategy=Throughput
 
-Frequency=2742190 Hz, Resolution=364.6720 ns, Timer=TSC
-
-.NET Core SDK=2.1.402
-  [Host]     : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT  [AttachedDebugger]
-  Job-PRXXZX : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
-
-IterationCount=1000  RunStrategy=Throughput
-
-|       Method |     Mean |     Error |    StdDev |   Median |      Min |      Max | Allocated |
-|------------- |---------:|----------:|----------:|---------:|---------:|---------:|----------:|
-|      JilPost | 642.0 us | 10.192 us |  96.97 us | 652.6 us | 416.1 us | 897.8 us |  16.96 KB |
-| ProtobufPost | 617.4 us |  9.846 us |  93.72 us | 615.9 us | 429.9 us | 898.2 us |  14.09 KB |
-|     JsonPost | 651.2 us | 12.014 us | 114.88 us | 641.3 us | 462.8 us | 997.7 us |  22.56 KB |
-
-  Mean      : Arithmetic mean of all measurements
-
-  Error     : Half of 99.9% confidence interval
-
-  StdDev    : Standard deviation of all measurements
-
-  Median    : Value separating the higher half of all measurements (50th percentile)
-
-  Min       : Minimum
-
-  Max       : Maximum
-
-  Allocated : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
-
-  1 us      : 1 Microsecond (0.000001 sec)
+|            Method |     Mean |   Error |    StdDev |   Median |      Min |        Max | Gen 0 | Gen 1 | Gen 2 | Allocated |
+|------------------ |---------:|--------:|----------:|---------:|---------:|-----------:|------:|------:|------:|----------:|
+|           JilPost | 490.6 us | 2.35 us |  70.48 us | 474.8 us | 372.9 us |   710.4 us |     - |     - |     - |   8.91 KB |
+|      ProtobufPost | 683.0 us | 3.46 us | 104.21 us | 654.5 us | 514.3 us | 1,008.8 us |     - |     - |     - |   8.23 KB |
+|          JsonPost | 531.7 us | 2.66 us |  79.88 us | 514.4 us | 393.6 us |   782.3 us |     - |     - |     - |  10.13 KB |
+|       MsgPackPost | 453.3 us | 1.96 us |  58.73 us | 440.2 us | 332.4 us |   633.5 us |     - |     - |     - |   7.66 KB |
+|      Utf8JsonPost | 452.2 us | 2.13 us |  64.02 us | 438.0 us | 334.4 us |   652.4 us |     - |     - |     - |   7.75 KB |
+| ZeroFormatterPost | 412.3 us | 1.68 us |  50.23 us | 404.2 us | 315.6 us |   568.2 us |     - |     - |     - |   7.38 KB |
