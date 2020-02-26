@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>2.0.0</PackageVersion>
-        <Version>2.0.0</Version>
+        <PackageVersion>2.0.1</PackageVersion>
+        <Version>2.0.1</Version>
         <Authors>Mutuduxf</Authors>
         <Company>Mutuduxf</Company>
         <PackageTags>Zaabee asp.net core ZeroFormatter</PackageTags>
@@ -15,7 +15,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-      <PackageReference Include="Zaabee.ZeroFormatter" Version="3.0.0" />
+      <PackageReference Include="Zaabee.ZeroFormatter" Version="3.1.0" />
     </ItemGroup>
 
 </Project>
