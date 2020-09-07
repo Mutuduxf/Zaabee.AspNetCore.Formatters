@@ -121,7 +121,7 @@ namespace TestProject
             var client = _server.CreateClient();
             var dtos = GetDtos();
             var stream = new MemoryStream();
-            MsgPackSerializer.Pack(dtos, stream);
+            await MsgPackSerializer.PackAsync(dtos, stream);
             stream.Seek(0, SeekOrigin.Begin);
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Values/Post")
             {
@@ -163,8 +163,8 @@ namespace TestProject
 
         private static bool CompareDtos(List<TestDto> lstOne, List<TestDto> lstTwo)
         {
-            lstOne = lstOne ?? new List<TestDto>();
-            lstTwo = lstTwo ?? new List<TestDto>();
+            lstOne ??= new List<TestDto>();
+            lstTwo ??= new List<TestDto>();
 
             if (lstOne.Count != lstTwo.Count) return false;
 

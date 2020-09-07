@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
+using Zaabee.Extensions;
 using Zaabee.ZeroFormatter;
 
 namespace Zaabee.AspNetCore.Formatters.ZeroFormatter
@@ -9,10 +10,11 @@ namespace Zaabee.AspNetCore.Formatters.ZeroFormatter
     {
         public ZeroInputFormatter(MediaTypeHeaderValue contentType) => SupportedMediaTypes.Add(contentType);
 
-        public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
+        public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
-            var result = ZeroSerializer.Unpack(context.ModelType, context.HttpContext.Request.Body);
-            return InputFormatterResult.SuccessAsync(result);
+            var bytes = await context.HttpContext.Request.Body.ReadToEndAsync();
+            var result = ZeroSerializer.Deserialize(context.ModelType, bytes);
+            return await InputFormatterResult.SuccessAsync(result);
         }
     }
 }

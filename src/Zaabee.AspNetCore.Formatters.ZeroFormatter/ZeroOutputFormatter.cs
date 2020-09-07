@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
+using Zaabee.Extensions;
 using Zaabee.ZeroFormatter;
 
 namespace Zaabee.AspNetCore.Formatters.ZeroFormatter
@@ -11,7 +12,8 @@ namespace Zaabee.AspNetCore.Formatters.ZeroFormatter
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            ZeroSerializer.Pack(context.ObjectType, context.Object, context.HttpContext.Response.Body);
+            ZeroSerializer.Serialize(context.ObjectType, context.Object)
+                .WriteToAsync(context.HttpContext.Response.Body);
             return Task.CompletedTask;
         }
     }

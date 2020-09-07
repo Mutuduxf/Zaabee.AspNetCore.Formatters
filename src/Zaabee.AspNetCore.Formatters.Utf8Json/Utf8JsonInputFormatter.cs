@@ -19,11 +19,11 @@ namespace Zaabee.AspNetCore.Formatters.Utf8Json
             _resolver = resolver;
         }
 
-        public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context,
+        public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context,
             Encoding encoding)
         {
             var request = context.HttpContext.Request;
-            return InputFormatterResult.SuccessAsync(Utf8JsonSerializer.Unpack(context.ModelType, request.Body,
+            return await InputFormatterResult.SuccessAsync(await Utf8JsonSerializer.UnpackAsync(context.ModelType, request.Body,
                 _resolver));
         }
     }

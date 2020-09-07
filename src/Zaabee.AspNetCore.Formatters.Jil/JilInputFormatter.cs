@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Jil;
@@ -19,12 +20,13 @@ namespace Zaabee.AspNetCore.Formatters.Jil
             SupportedMediaTypes.Add(mediaTypeHeaderValue);
         }
 
-        public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context,
+        public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context,
             Encoding encoding)
         {
             var request = context.HttpContext.Request;
-            using var reader = context.ReaderFactory(request.Body, encoding);
-            return InputFormatterResult.SuccessAsync(JilSerializer.Deserialize(context.ModelType, reader,
+            using var reader = new StreamReader(request.Body, encoding);
+            var json = await reader.ReadToEndAsync();
+            return await InputFormatterResult.SuccessAsync(JilSerializer.Deserialize(context.ModelType, json,
                 _jilOptions));
         }
     }

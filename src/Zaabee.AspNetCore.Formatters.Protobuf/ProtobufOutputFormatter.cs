@@ -1,6 +1,9 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
+using Zaabee.Extensions;
 using Zaabee.Protobuf;
 
 namespace Zaabee.AspNetCore.Formatters.Protobuf
@@ -11,7 +14,7 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            ProtobufSerializer.Pack(context.Object, context.HttpContext.Response.Body);
+            ProtobufSerializer.Serialize(context.Object).WriteToAsync(context.HttpContext.Response.Body);
             return Task.CompletedTask;
         }
     }
