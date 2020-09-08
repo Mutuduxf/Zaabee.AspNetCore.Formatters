@@ -1,18 +1,18 @@
 using System;
-using Jil;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Zaabee.AspNetCore.Formatters.Jil
+namespace Zaabee.AspNetCore.Formatters.ZeroFormatter
 {
     public static class MvcBuilderExtension
     {
-        public static IMvcBuilder AddJil(this IMvcBuilder mvcBuilder, string contentType = "application/x-jil",
-            string format = "jil", Options jilOptions = null)
+        public static IMvcBuilder AddZeroFormatter(this IMvcBuilder mvcBuilder,
+            string contentType = "application/x-zeroformatter",
+            string format = "zeroformatter")
         {
             if (string.IsNullOrWhiteSpace(contentType)) throw new ArgumentNullException(nameof(contentType));
             if (string.IsNullOrWhiteSpace(format)) throw new ArgumentNullException(nameof(format));
 
-            mvcBuilder.AddMvcOptions(options => { options.AddJilFormatter(contentType, format, jilOptions); });
+            mvcBuilder.AddMvcOptions(options => { options.AddZeroFormatter(contentType, format); });
 
             return mvcBuilder;
         }

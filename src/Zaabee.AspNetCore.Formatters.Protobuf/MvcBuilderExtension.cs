@@ -1,18 +1,17 @@
 using System;
-using Jil;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Zaabee.AspNetCore.Formatters.Jil
+namespace Zaabee.AspNetCore.Formatters.Protobuf
 {
     public static class MvcBuilderExtension
     {
-        public static IMvcBuilder AddJil(this IMvcBuilder mvcBuilder, string contentType = "application/x-jil",
-            string format = "jil", Options jilOptions = null)
+        public static IMvcBuilder AddProtobuf(this IMvcBuilder mvcBuilder, string contentType = "application/x-protobuf",
+            string format = "protobuf")
         {
             if (string.IsNullOrWhiteSpace(contentType)) throw new ArgumentNullException(nameof(contentType));
             if (string.IsNullOrWhiteSpace(format)) throw new ArgumentNullException(nameof(format));
 
-            mvcBuilder.AddMvcOptions(options => { options.AddJilFormatter(contentType, format, jilOptions); });
+            mvcBuilder.AddMvcOptions(options => { options.AddProtobufFormatter(contentType, format); });
 
             return mvcBuilder;
         }

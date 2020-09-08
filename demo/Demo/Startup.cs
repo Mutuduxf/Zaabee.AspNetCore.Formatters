@@ -20,22 +20,20 @@ namespace Demo
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers(options =>
-                {
-                    options.AddProtobufFormatter();
-                    options.AddMsgPackFormatter();
-                    options.AddUtf8JsonFormatter();
-                    options.AddZeroFormatter();
-                    options.AddJilFormatter(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
-                        excludeNulls: true, includeInherited: true,
-                        serializationNameFormat: SerializationNameFormat.CamelCase));
-                })
+            services.AddControllers()
+                .AddJil(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
+                    excludeNulls: true, includeInherited: true,
+                    serializationNameFormat: SerializationNameFormat.CamelCase))
+                .AddMsgPack()
+                .AddProtobuf()
+                .AddUtf8Json()
+                .AddZeroFormatter()
                 .AddNewtonsoftJson()
                 .AddXmlSerializerFormatters()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
