@@ -25,7 +25,6 @@ namespace Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers()
                 .AddJil(jilOptions: new Options(dateFormat: DateTimeFormat.ISO8601,
                     excludeNulls: true, includeInherited: true,

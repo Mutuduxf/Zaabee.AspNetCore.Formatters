@@ -13,6 +13,6 @@
       <ProjectReference Include="..\..\src\Zaabee.AspNetCore.Formatters.ZeroFormatter\Zaabee.AspNetCore.Formatters.ZeroFormatter.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
     </ItemGroup>
 </Project>
