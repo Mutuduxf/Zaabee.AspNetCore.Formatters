@@ -24,10 +24,8 @@ namespace Zaabee.AspNetCore.Formatters.Jil
             Encoding encoding)
         {
             var request = context.HttpContext.Request;
-            using var reader = new StreamReader(request.Body, encoding);
-            var json = await reader.ReadToEndAsync();
-            return await InputFormatterResult.SuccessAsync(JilSerializer.Deserialize(context.ModelType, json,
-                _jilOptions));
+            return await InputFormatterResult.SuccessAsync(await JilSerializer.UnpackAsync(context.ModelType,
+                context.HttpContext.Request.Body, _jilOptions, Encoding.UTF8));
         }
     }
 }
