@@ -160,25 +160,15 @@ namespace TestProject
             Assert.True(CompareDtos(dtos, result));
         }
 
-        private static bool CompareDtos(List<TestDto> lstOne, List<TestDto> lstTwo)
+        private static bool CompareDtos(List<TestDto> first, List<TestDto> second)
         {
-            lstOne ??= new List<TestDto>();
-            lstTwo ??= new List<TestDto>();
+            if (first is null || second is null) return false;
+            if (first.Count != second.Count) return false;
 
-            if (lstOne.Count != lstTwo.Count) return false;
-
-            for (var i = 0; i < lstOne.Count; i++)
+            for (var i = 0; i < first.Count; i++)
             {
-                var dtoOne = lstOne[i];
-                var dtoTwo = lstTwo[i];
-
-                var i1 = dtoOne.Id != dtoTwo.Id;
-                var i2 = dtoOne.CreateTime.Ticks != dtoTwo.CreateTime.Ticks;
-                var i3 = dtoOne.Enum != dtoTwo.Enum;
-                var i4 = dtoOne.Name != dtoTwo.Name;
-                var i5 = dtoOne.Tag != dtoTwo.Tag;
-//                var i6 = dtoOne.TestTime.Ticks != dtoTwo.TestTime.Ticks;
-
+                var dtoOne = first[i];
+                var dtoTwo = second[i];
 
                 if (dtoOne.Id != dtoTwo.Id ||
                     dtoOne.CreateTime.ToUniversalTime() != dtoTwo.CreateTime.ToUniversalTime() ||
