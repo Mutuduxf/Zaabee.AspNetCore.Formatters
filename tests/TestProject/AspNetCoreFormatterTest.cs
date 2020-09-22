@@ -19,7 +19,6 @@ using Zaabee.ZeroFormatter;
 
 namespace TestProject
 {
-
     public class AspNetCoreFormatterTest
     {
         private readonly TestServer _server;
