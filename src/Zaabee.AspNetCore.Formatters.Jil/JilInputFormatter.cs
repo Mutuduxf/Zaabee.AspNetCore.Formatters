@@ -1,4 +1,3 @@
-using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Jil;
@@ -23,7 +22,6 @@ namespace Zaabee.AspNetCore.Formatters.Jil
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context,
             Encoding encoding)
         {
-            var request = context.HttpContext.Request;
             return await InputFormatterResult.SuccessAsync(await JilSerializer.UnpackAsync(context.ModelType,
                 context.HttpContext.Request.Body, _jilOptions, Encoding.UTF8));
         }

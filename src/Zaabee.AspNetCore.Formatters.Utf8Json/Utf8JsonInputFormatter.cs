@@ -22,9 +22,8 @@ namespace Zaabee.AspNetCore.Formatters.Utf8Json
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context,
             Encoding encoding)
         {
-            var request = context.HttpContext.Request;
-            return await InputFormatterResult.SuccessAsync(await Utf8JsonSerializer.UnpackAsync(context.ModelType, request.Body,
-                _resolver));
+            return await InputFormatterResult.SuccessAsync(await Utf8JsonSerializer.UnpackAsync(context.ModelType,
+                context.HttpContext.Request.Body, _resolver));
         }
     }
 }
