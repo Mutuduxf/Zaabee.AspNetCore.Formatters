@@ -33,8 +33,8 @@ namespace Demo
                 .AddProtobuf()
                 .AddUtf8Json()
                 .AddZeroFormatter()
-                .AddNewtonsoftJson()
                 .AddXmlSerializerFormatters()
+                .AddNewtonsoftJson()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
 
