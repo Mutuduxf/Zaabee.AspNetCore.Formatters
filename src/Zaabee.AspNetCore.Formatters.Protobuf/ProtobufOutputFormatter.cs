@@ -10,10 +10,9 @@ namespace Zaabee.AspNetCore.Formatters.Protobuf
     {
         public ProtobufOutputFormatter(MediaTypeHeaderValue contentType) => SupportedMediaTypes.Add(contentType);
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            ProtobufSerializer.Serialize(context.Object).WriteToAsync(context.HttpContext.Response.Body);
-            return Task.CompletedTask;
+            await ProtobufSerializer.Serialize(context.Object).WriteToAsync(context.HttpContext.Response.Body);
         }
     }
 }

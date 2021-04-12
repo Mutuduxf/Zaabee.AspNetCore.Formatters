@@ -20,10 +20,11 @@ namespace Zaabee.AspNetCore.Formatters.Jil
             SupportedMediaTypes.Add(mediaTypeHeaderValue);
         }
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context,
+            Encoding selectedEncoding)
         {
             var response = context.HttpContext.Response;
-            return response.WriteAsync(JilSerializer.SerializeToJson(context.Object, _jilOptions));
+            await response.WriteAsync(JilSerializer.SerializeToJson(context.Object, _jilOptions));
         }
     }
 }

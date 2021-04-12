@@ -21,10 +21,10 @@ namespace Zaabee.AspNetCore.Formatters.Utf8Json
             _resolver = resolver;
         }
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
             var response = context.HttpContext.Response;
-            return response.WriteAsync(Utf8JsonSerializer.SerializeToJson(context.Object, _resolver));
+            await response.WriteAsync(Utf8JsonSerializer.SerializeToJson(context.Object, _resolver));
         }
     }
 }

@@ -9,10 +9,9 @@ namespace Zaabee.AspNetCore.Formatters.MsgPack
     {
         public MsgPackOutputFormatter(MediaTypeHeaderValue contentType) => SupportedMediaTypes.Add(contentType);
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            MsgPackSerializer.PackAsync(context.Object, context.HttpContext.Response.Body);
-            return Task.CompletedTask;
+            await MsgPackSerializer.PackAsync(context.Object, context.HttpContext.Response.Body);
         }
     }
 }
