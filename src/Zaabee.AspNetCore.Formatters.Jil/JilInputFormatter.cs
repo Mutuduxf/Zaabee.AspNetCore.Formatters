@@ -23,7 +23,7 @@ namespace Zaabee.AspNetCore.Formatters.Jil
             Encoding encoding)
         {
             return await InputFormatterResult.SuccessAsync(await JilSerializer.UnpackAsync(context.ModelType,
-                context.HttpContext.Request.Body, _jilOptions, Encoding.UTF8));
+                context.HttpContext.Request.Body, _jilOptions, encoding));
         }
     }
 }
