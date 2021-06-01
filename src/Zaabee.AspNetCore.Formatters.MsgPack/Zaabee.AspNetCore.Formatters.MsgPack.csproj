@@ -6,8 +6,8 @@
         <LangVersion>latest</LangVersion>
         <IsPackable>true</IsPackable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>2021.2.1</PackageVersion>
-        <Version>2021.2.1</Version>
+        <PackageVersion>2021.3.0</PackageVersion>
+        <Version>2021.3.0</Version>
         <Authors>Mutuduxf</Authors>
         <Company>Mutuduxf</Company>
         <PackageTags>Zaabee asp.net core MsgPack</PackageTags>
@@ -18,7 +18,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Zaabee.MsgPack" Version="2021.1.5" />
+        <PackageReference Include="Zaabee.MsgPack" Version="2021.4.0" />
     </ItemGroup>
 
 </Project>
