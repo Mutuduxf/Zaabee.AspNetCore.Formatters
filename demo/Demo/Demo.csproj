@@ -13,7 +13,7 @@
       <ProjectReference Include="..\..\src\Zaabee.AspNetCore.Formatters.ZeroFormatter\Zaabee.AspNetCore.Formatters.ZeroFormatter.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" Condition="'$(TargetFramework)' == 'netcoreapp3.1'"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.6" Condition="'$(TargetFramework)' == 'net5.0'"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.16" Condition="'$(TargetFramework)' == 'netcoreapp3.1'"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.7" Condition="'$(TargetFramework)' == 'net5.0'"/>
     </ItemGroup>
 </Project>
